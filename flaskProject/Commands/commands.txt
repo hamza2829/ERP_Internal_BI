@@ -1,0 +1,5 @@
+pip install matplotlib pandas
+pip install statsmodels
+pip install ARIMA
+pip install flask
+pip install --upgrade pip -M
