@@ -18,7 +18,7 @@ def perform_arima(file_path):
 
         # Make predictions (adjust the number of forecast steps as needed)
         forecast = results.forecast(steps=10)
-
+        print(forecast);
         return forecast.tolist()
 
     except Exception as e:
