@@ -1,7 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 from flask_cors import CORS
+
+from csv_generator.ProductAnalysis import load_data, perform_analysis
 
 app = Flask(__name__)
 
@@ -39,6 +41,42 @@ def predict_arima():
     except FileNotFoundError as e:
         return jsonify({'error': f'File not found: {str(e)}'}), 404
 
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/analyze-products', methods=['GET'])
+def analyze_product():
+    product_name = request.args.get('product_name').strip().lower()
+    file_path = 'csv_generator/products.csv'
+    try:
+        df = load_data(file_path)
+
+        # Normalize product names for comparison
+        df['name'] = df['name'].str.strip().str.lower()
+
+        print("*****************Data******************")
+        print(df)
+
+        product_df = df[df['name'] == product_name]
+
+        if product_df.empty:
+            return jsonify({'error': 'Product not found'}), 404
+
+        analysis_results = perform_analysis(product_df)
+        return jsonify(analysis_results)
+    except FileNotFoundError as e:
+        return jsonify({'error': f'File not found: {str(e)}'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+@app.route('/products', methods=['GET'])
+def get_products():
+    file_path = 'csv_generator/products.csv'
+    try:
+        df = pd.read_csv(file_path)
+        products = df['name'].unique().tolist()
+        return jsonify({'products': products}), 200
+    except FileNotFoundError as e:
+        return jsonify({'error': f'File not found: {str(e)}'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -3,3 +3,5 @@ pip install statsmodels
 pip install ARIMA
 pip install flask
 pip install --upgrade pip -M
+pip install seaborn
+pip install flask-cors
