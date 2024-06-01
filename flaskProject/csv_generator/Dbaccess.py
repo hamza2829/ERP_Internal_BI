@@ -65,7 +65,7 @@ def generate_csv():
 
 
 # Define the job and schedule it to run daily at 2 AM
-schedule.every().day.at("02:30").do(generate_csv)
+schedule.every().day.at("02:01").do(generate_csv)
 
 # Loop to continuously check for scheduled jobs
 while True:
